@@ -20,13 +20,48 @@ const { NotImplementedError } = require('../extensions/index.js');
  * 
  */
 class VigenereCipheringMachine {
-  encrypt() {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+  constructor(direct = true) {
+    this.direct = direct;
   }
-  decrypt() {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+
+  encrypt(str, key) {
+    if(!str || !key) throw new Error("Incorrect arguments!");
+    str = str.toUpperCase();
+    key = key.toUpperCase();
+    let count = 0;
+    let encryptMessage = "";
+    for (let i = 0; i < str.length; i++) {
+      if(str.charCodeAt(i) < 65 || str.charCodeAt(i) > 90) {
+        encryptMessage += str[i];
+      } else {
+        let j = count % key.length;
+        let charCode = ((str.charCodeAt(i) - 65) + (key.charCodeAt(j) - 65)) % 26 + 65;
+        encryptMessage += String.fromCharCode(charCode);
+        count++;
+      }
+    }
+    if(!this.direct) return encryptMessage.split("").reverse().join("");
+    return encryptMessage;
+  }
+
+  decrypt(str, key) {
+    if(!str || !key) throw new Error("Incorrect arguments!");
+    str = str.toUpperCase();
+    key = key.toUpperCase();
+    let count = 0;
+    let decryptMessage = "";
+    for (let i = 0; i < str.length; i++) {
+      if(str.charCodeAt(i) < 65 || str.charCodeAt(i) > 90) {
+        decryptMessage += str[i];
+      } else {
+        let j = count % key.length;
+        let charCode = ((str.charCodeAt(i) - 65) - (key.charCodeAt(j) - 65) + 26) % 26 + 65;
+        decryptMessage += String.fromCharCode(charCode);
+        count++;
+      }
+    }
+    if(!this.direct) return decryptMessage.split("").reverse().join("");
+    return decryptMessage;
   }
 }
 
